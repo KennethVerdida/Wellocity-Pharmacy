@@ -1,0 +1,118 @@
+{% load static %}
+
+{% block headerinclude %}
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" rel="stylesheet">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+<link rel="stylesheet" type="text/css" href="{% static 'css/medicineRegistration.css' %}">
+
+<title>Medicine Registration</title>
+{% endblock headerinclude %}
+
+<!--MEDICINE REGISTRATION FORM -->
+{% block content %}
+<div class="container">
+  <header class="blog-header py-1">
+    <div class="row flex-nowrap justify-content-between align-items-center">
+      <div class="col-4 pt-1"></div>
+      <div class="col-4 pt-1 text-center">
+        <br>
+        <br>
+        <img src="{% static 'images/w2.png' %}" width="320" height="120">
+      </div>
+      <div class="col-4 d-flex justify-content-end align-items-center"></div>
+    </div>
+  </header>
+</div>
+
+<div class="signup-form">
+  <form id="form1" action="registration" method="POST" autocomplete="off" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <h2>Medicine Registration</h2>
+    <div class="row">
+      <div class="col-xs-6">
+        <p>Category</p><input type="text" class="form-control" id="id-category" name="category" placeholder="Input the Category" required minlength="1" maxlength="30">
+      </div>
+      <div class="col-xs-6">
+        <p>Generic Name</p><input type="text" class="form-control" id="id-genericName" name="genericName" placeholder="Input the Generic Name" required minlength="1" maxlength="50">
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-xs-6">
+        <p>Common Brand</p><input type="text" class="form-control" id="id-commonBrand" name="commonBrand" placeholder="Input the Common Brand" required minlength="1" maxlength="50">
+      </div>
+      <div class="col-xs-6">
+        <p>Manufactured Date</p><input type="text" class="form-control" placeholder="mm/dd/yyyy" onfocus="(this.type='date')" onblur="(this.type='text')" id="id-manufacturedDate" name="manufacturedDate" required>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-6">
+        <p>Expiry Date</p><input type="text" class="form-control" placeholder="mm/dd/yyyy" onfocus="(this.type='date')" onblur="(this.type='text')" id="id-expiryDate" name="expiryDate" required>
+      </div>
+      <div class="col-xs-6">
+        <p>Size (cm)</p><input type="number" class="form-control" id="id-size" name="size" placeholder="Input the Size" required step="0.10" min="0" max="2">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-6">
+        <p>How to Use</p><input type="text" class="form-control" id="id-howTo_Use" name="howTo_Use" placeholder="Input the Use" required minlength="1" maxlength="200">
+      </div>
+      <div class="col-xs-6">
+        <p>Effects</p><input type="text" class="form-control" id="id-sideEffects" name="sideEffects" placeholder="Input the Effects" required minlength="1" maxlength="200">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-6">
+        <p>Price</p><input type="number" class="form-control" id="id-price" name="price" placeholder="Input the Price" required step="0.10" min="1" max="10000">
+      </div>
+      <div class="col-xs-6">
+        <p>No. of Items</p><input type="number" class="form-control" id="id-noItems" name="noItems" placeholder="Input the Items" min="1" max="500" required>
+      </div>
+    </div>
+    <br>
+
+    <p>Upload Images</p>
+    <div class="row">
+      <div class="col-xs-4"><input type="file" class="form-control" id="id-img1" name="img1" value="fileupload" required> </div>
+      <div class="col-xs-4"><input type="file" class="form-control" id="id-img2" name="img2" value="fileupload"> </div>
+      <div class="col-xs-4"><input type="file" class="form-control" id="id-img3" name="img3" value="fileupload"> </div>
+    </div>
+    <br>
+      
+    <div class="row">
+      <div class="col-xs-6">
+        <a type="button" class="btn btn1" style="color: black; border-radius: 3px; width: 200px;background-color: coral; height: 45px; margin-left: 265; padding:10px" id="id-cancel" href="{% url 'customer:dashboard_view' %}">Cancel</a>
+      </div>
+      <div class="col-xs-6">
+        <form id="submit_form" method="POST">
+          {% csrf_token %}
+          <button type="submit" name="form_type" value="formTwo" class="btn btn-sm btn-link" style="color: white; border-radius: 3px; width: 200px; background-color: blue; height: 45px"> Continue </button>
+        </form>
+      </div>    
+      <div class="col-xs-4"><input type="text" value="0" min=0 name="order" hidden></div> 
+      <div class="col-xs-4"><input type="text" value="0" min=0 name="total" hidden></div> 
+    </div>
+  </form>
+</div>
+<br>
+<br>
+{% endblock content %}
+
+{% block footerinclude %}
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+{% endblock footerinclude %}

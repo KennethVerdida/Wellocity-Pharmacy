@@ -1,0 +1,102 @@
+body {
+    height: 100%;
+    background-image: url('/static/images/b2.jpg');
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .blog-header {
+    line-height: 1;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .blog-header-logo {
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+    font-size: 1 rem;
+    color: #ffffff;
+  }
+
+  .blog-header-logo:hover {
+    text-decoration: none;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: Roboto-Regular, 'Helvetica Neue', Helvetica, Tahoma, Arial, Sans-serif;
+  }
+
+  .display-4 {
+    font-size: 2.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .display-4 {
+      font-size: 3rem;
+    }
+  }
+
+  hr {
+    height: 1px;
+    background-color: #ffffff;
+    border: none;
+  }
+/**data table **/
+        	.datatable{
+                color: #566787;
+                background: #fbda57;
+        		font-family: 'Roboto', sans-serif;
+        	}
+            .table-responsive {
+                margin: 30px 0;
+            }
+        	.table-wrapper {
+        		min-width: 1000px;
+                background: #ffe8e2;
+                padding: 20px;        
+                box-shadow: 0 1px 1px rgba(0,0,0,.05);
+            }
+        	.table-title {
+                padding-bottom: 10px;
+                margin: 0 0 10px;
+            }
+            .table-title h2 {
+                margin: 8px 0 0;
+                font-size: 22px;
+            }
+            table.table tr th, table.table tr td {
+                border-color: #e9e9e9;
+            }
+            table.table-striped tbody tr:nth-of-type(odd) {
+            	background-color: #fcfcfc;
+        	}
+        	table.table-striped.table-hover tbody tr:hover {
+        		background: #f5f5f5;
+        	}
+            table.table th i {
+                font-size: 13px;
+                margin: 0 5px;
+                cursor: pointer;
+            }
+            table.table td:last-child {
+                width: 130px;
+            }
+            table.table td a {
+                color: #a0a5b1;
+                display: inline-block;
+                margin: 0 5px;
+            }
+        	table.table td a.view {
+                color: #03A9F4;
+            }
+            table.table td a.delete {
+                color: #E34724;
+            }
+            table.table td i {
+                font-size: 19px;
+            }    
+         

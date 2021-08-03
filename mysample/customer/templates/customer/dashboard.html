@@ -1,0 +1,722 @@
+{% load static %}
+
+{% block headerinclude %}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Wellocity Pharmacy</title>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="{% static 'css/landing.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
+<link href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+<link rel='stylesheet' href='/static/css/dashboard.css' />
+
+{% endblock headerinclude %}
+
+
+{% block content %}
+<div class="container">
+  <header class="blog-header py-1">
+    <div class="row flex-nowrap justify-content-between align-items-center">
+      <div class="col-4 text-center">
+        <br>
+        <img src="{% static 'images/w2.png' %}" width="320" height="120">
+      </div>
+      <div class="col-6 d-flex justify-content-end align-items-center"></div>
+      <a type="button" class="btn btn1" style="color: white; border: 2px solid; border-color: white; border-radius: 3px; padding-top: 0px; padding: 5px; padding-bottom: 0px; width:80px; background-color: chocolate; height: 35px;" href="{% url 'customer:landing_view' %}"> Logout </a>
+    </div>
+  </header>
+  <br><br>
+
+  <!-- DataTales of Medicine Registration Summary-->
+  <div class="container-fluid" style="width:100%">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <br>
+        <h4 class="m-0 font-weight-bold text-info">MEDICINE SUMMARY REGISTRATION</h4>
+        <br>
+        <form id="form1" action="" method="POST" autocomplete="off" enctype="multipart/form-data">
+          {% csrf_token %}
+          <p align="left"><a type="submit" class="btn btn-sm btn-info" id="id_registration" href="{% url 'customer:registration_view' %}">ADD MEDICINE REGISTRATION</a></p>
+        </form>
+      </div>
+      <div class="form-group">
+
+        <br>
+        <div class="form-group">
+          <div class="col-xs-2">
+            <b> FROM</b>&nbsp;
+            <input type="text" class="form-control" id="min-date" name="min-date" style="width: 150px;">&nbsp;&nbsp;
+          </div>
+          <div class="col-xs-2">
+            <b> TO</b>&nbsp;
+            <input id="max-date" class="form-control" name="max-date" type="text" style="width: 150px;">
+          </div>
+        </div>
+          
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="myMedTable" width="100%" cellspacing="0">
+              <thead class="thead-light">
+                <tr>
+                  <th style="text-align:center">Date Manufactured</th>
+                  <th style="text-align:center">Expirary Date</th>
+                  <th style="text-align:center">Common Brand</th>
+                  <th style="text-align:center">Size</th>
+                  <th style="text-align:center">Total No. of Items</th>
+                  <th style="text-align:center">Price of each Items</th>
+                  <th style="text-align:center">Order</th>
+                  <th style="text-align:center">Amount Paid</th>
+                  <th style="text-align:center;">Operations</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for medicine in medicines %}
+                <tr>
+                  <td style="text-align:center">{{medicine.manufacturedDate}}</td>
+                  <td style="text-align:center">{{medicine.expiryDate}}</td>
+                  <td>{{medicine.commonBrand}}</td>
+                  <td style="text-align:center">{{medicine.size}}</td>
+                  <td style="text-align:center">{{medicine.noItems}}</td>
+                  <td style="text-align:center">{{medicine.price}}</td>
+                  <td style="text-align:center">{{medicine.order}}</td>
+                  <td style="text-align:center">{{medicine.total}}</td>
+                  <td>
+                    <div class="text-center">
+                      <a type="button" class="btn btn-default btn-sm" style="width:35px" data-toggle="modal" href="#" data-target="#viewModal-{{medicine.id}}">
+                        <span class="glyphicon glyphicon-eye-open" style="color:black"></span>
+                      </a>
+                      <button type="button" class="btn btn-default btn-sm mr-2" style="width:35px" data-toggle="modal" data-target="#deleteModal-{{medicine.id}}">
+                        <span class="glyphicon glyphicon-trash"></span>
+                      </button>
+                      <button type="button" class="btn btn-default btn-sm" style="width:35px" data-toggle="modal" data-target="#purchaseModal-{{medicine.id}}">
+                        <span class="glyphicon glyphicon-shopping-cart"></span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Modal VIEW-->
+                <div class="modal fade" id="viewModal-{{medicine.id}}" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="background-color:beige">
+                      <div class="modal-header" style="background-color:chocolate; color:white">
+                        <h4 class="modal-title" id="viewModalLabel">
+                          <strong>MEDICINE REGISTRATION</strong></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+
+                      <form id="updateForm" method="post">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                          <input type="text" name="medicine-id" value="{{medicine.id}}" hidden>
+                          <div class="row">
+                            <div class="col-xs-6">
+                              <p><strong>Date Registered</strong></p><input type="text" class="form-control" id="id-dateRegistered_Medicine" placeholder="mm/dd/yyyy" onfocus="(this.type='date')" onblur="(this.type='text')" name="medicine-dateRegistered" value="{{medicine.dateRegistered_Medicine}}" readonly>
+                            </div>
+                            <div class="col-xs-6">
+                              <p><strong>SKU</strong></p><input type="text" class="form-control" id="id-sku" name="medicine-sku" value="MEDICINE - {{medicine.id}}" readonly>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-xs-6">
+                              <p><strong>Category</strong></p><input type="text" class="form-control" id="id-category" placeholder="Input the Category" name="medicine-category" value="{{medicine.category}}" required minlength="1" maxlength="30">
+                            </div>
+                            <div class="col-xs-6">
+                              <p><strong>Generic Name</strong></p><input type="text" class="form-control" id="id-genericName" placeholder="Input the Generic Name" name="medicine-genericName" value="{{medicine.genericName}}" required minlength="1" maxlength="50">
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-xs-6">
+                              <p><strong>Common Brand</strong></p><input type="text" class="form-control" id="id-commonBrand" placeholder="Input the Common Brand" name="medicine-commonBrand" value="{{medicine.commonBrand}}" required minlength="1" maxlength="50">
+                            </div>
+                            <div class="col-xs-6">
+                              <p><strong>Manufactured Date</strong></p><input type="text" class="form-control" id="id-manufacturedDate" placeholder="mm/dd/yyyy" onfocus="(this.type='date')" onblur="(this.type='text')" name="medicine-manufacturedDate" value="{{medicine.manufacturedDate}}" required>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-xs-6">
+                              <p><strong>Expiry Date</strong></p><input type="text" class="form-control" id="id-expiryDate" placeholder="mm/dd/yyyy" onfocus="(this.type='date')" onblur="(this.type='text')" name="medicine-expiryDate" value="{{medicine.expiryDate}}" required>
+                            </div>
+                            <div class="col-xs-6">
+                              <p><strong>Size (Contents)</strong></p><input type="number" class="form-control" id="id-size" placeholder="Input the Size" name="medicine-size" value="{{medicine.size}}" required step="0.10" min="0" max="2">
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-xs-12">
+                              <p><strong>How to Use</strong></p><input type="text" class="form-control" id="id-howTo_Use" placeholder="Input the Use" name="medicine-howTo_Use" value="{{medicine.howTo_Use}}" required minlength="1" maxlength="200">
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-xs-12">
+                              <p><strong>Effects</strong></p><input type="text" class="form-control" id="id-sideEffects" placeholder="Input the Effects" name="medicine-sideEffects" value="{{medicine.sideEffects}}" required minlength="1" maxlength="200">
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-xs-6">
+                              <p><strong>Price</strong></p><input type="number" class="form-control" id="id-price" placeholder="Input the Price" name="medicine-price" value="{{medicine.price}}" required step="0.10" min="1" max="10000">
+                            </div>
+
+                            <div class="col-xs-6">
+                              <p><strong>No. of Items</strong></p><input type="number" class="form-control" id="id-noItems" placeholder="Input the Items" name="medicine-noItems" value="{{medicine.noItems}}" min="1" max="500" required>
+                            </div>
+                          </div>
+
+                          <p><strong>Upload Images</strong></p>
+                          <div class="row">
+                            <div class="col-xs-4">
+                              <img src="{{medicine.img1.url}}" width="100" height="100" disabled>
+                            </div>
+
+                            <div class="col-xs-4">
+                              {% if medicine.img2 %}
+                              <img src="{{medicine.img2.url}}" width="100" height="100">
+                              {% else %}
+                              <img src="{% static 'media/default1.jpg'%}" width="100" height="100">
+                              {% endif %}
+                            </div>
+
+                            <div class="col-xs-4">
+                              {% if medicine.img3 %}
+                              <img src="{{medicine.img3.url}}" width="100" height="100">
+                              {% else %}
+                              <img src="{% static 'media/default1.jpg' %}" width="100" height="100">
+                              {% endif %}
+                            </div>
+                          </div>
+                          <br>
+                          
+                          <div class="col-xs-4"><input type="text" name="medicine-totalPrice" value="0" hidden></div>
+                          <div class="col-xs-4"><input type="text" name="medicine-order" value="0" hidden></div>
+                        
+                          <div class="modal-footer" style="background-color:beige">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">CANCEL</button>
+                            <button type="submit" id="btnUpdate" name="btnUpdate" class="btn btn-danger">UPDATE</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Modal DELETE -->
+                <div class="modal fade" id="deleteModal-{{medicine.id}}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header" style="background-color:chocolate; color:white">
+                        <h4 class="modal-title" id="deleteModalLabel"><strong>DELETE RECORD</strong></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+
+                      <div class="modal-body" style="background-color:beige">
+                        <form id="deleteForm" method="post">
+                          {% csrf_token %}
+                          <input type="text" name="mmedicine-id" value={{medicine.id}} hidden>
+                          <p>Are you sure you want to delete this record?</p>
+                          <div class="modal-footer" style="background-color:beige">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">NO</button>
+                            <button type="submit" id="btnDelete" name="btnDelete" class="btn btn-danger">YES</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Modal Purchase-->
+                <div class="modal fade" id="purchaseModal-{{medicine.id}}" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content" style="background-color:beige">
+                      <div class="modal-header" style="background-color:chocolate; color:white">
+                        <h4 class="modal-title" id="viewModalLabel">
+                          <strong>PLACE YOUR ORDER</strong></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+
+                      <form id="purchaseForm" method="post">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                          <input type="text" name="medicine-id" value="{{medicine.id}}" hidden>
+                            
+                          <div class="row">
+                            <div class="col-xs-6">
+                              <p><strong>SKU</strong></p><input type="text" class="form-control" id="id-sku" name="medicine-sku" value="MEDICINE - {{medicine.id}}" readonly>
+                            </div>
+                            <div class="col-xs-6">
+                              <p><strong>Category</strong></p><input type="text" class="form-control" id="id-category" placeholder="Input the Category" name="medicine-category" value="{{medicine.category}}" required minlength="1" maxlength="30" readonly>
+                            </div>
+                          </div>
+                        
+                          <div class="row">
+                            <div class="col-xs-6">
+                              <p><strong>Generic Name</strong></p><input type="text" class="form-control" id="id-genericName" placeholder="Input the Generic Name" name="medicine-genericName" value="{{medicine.genericName}}" required minlength="1" maxlength="50" readonly>
+                            </div>                            
+                            <div class="col-xs-6">
+                              <p><strong>Common Brand</strong></p><input type="text" class="form-control" id="id-commonBrand" placeholder="Input the Common Brand" name="medicine-commonBrand" value="{{medicine.commonBrand}}" required minlength="1" maxlength="50" readonly>
+                            </div>
+                          </div>
+                            
+                          <div class="row">
+                            <div class="col-xs-6">
+                              <p><strong>Price</strong></p><input type="number" class="form-control" id="id-price" placeholder="Input the Price" name="medicine-price" value="{{medicine.price}}" required step="0.10" min="1" max="10000" readonly>
+                            </div>
+                            <div class="col-xs-6">
+                              <p><strong>No. of Items Left</strong></p><input type="number" class="form-control" id="id-noItems" placeholder="Input the Items" name="medicine-noItems" value="{{medicine.noItems}}" min="1" max="500" required readonly>
+                            </div>
+                          </div>
+ 
+                         <div class="row">
+                            <div class="col-xs-6">
+                              {% if 0 >= medicine.noItems %}
+                              <p><strong>No. of Items to Purchase</strong></p><input type="text" class="form-control" id="outOfStock" name="outOfStock" placeholder="OUT OF STOCK" readonly>
+                              {% else %}
+                              <p><strong>No. of Items to Purchase</strong></p><input type="number" class="form-control" id="order" placeholder="Input the No. to Purchase" name="medicine-ordering_Items" min = 0  value = "0">
+                              <div class="col-xs-4"><input type="text"  min=0 
+                              name="medicine-total_Items" value="{{medicine.price}}" hidden></div>
+                              {% endif%}
+                            </div>   
+                          </div>                           
+                          <br> 
+                            
+                          <div class="modal-footer" style="background-color:beige">
+                            {% if not 0 >= medicine.noItems %}
+                            <button type="submit" id="btnPurchase" name="btnPurchase" class="btn btn-danger">BUY NOW</button>
+                            {% endif%}
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">CANCEL</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>                
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+    
+  <!-- DataTales of Customer Summary Registration-->
+  <div class="container-fluid" style="width:100%">
+    <div class="card shadow mb-4">
+      <div class="card-header py-2">
+        <br>
+        <h4 class="m-0 font-weight-bold text-info">CUSTOMER SUMMARY REGISTRATION</h4>
+        <br>
+      </div>
+      <br>
+      <div class="card-body">
+        <div class="form-group">
+          <div class="col-xs-2">
+            <b>FROM</b>&nbsp;
+            <input id="min" class="form-control" name="min" type="text" style="width: 150px;">&nbsp;&nbsp;
+          </div>
+          <div class="col-xs-2">
+            <b>TO</b>&nbsp;
+            <input id="max" class="form-control" name="max" type="text" style="width: 150px;">
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="myCustTable" width="100%" cellspacing="0">
+              <thead class="thead-light">
+                <tr>
+                  <th style="text-align:center">Date Registered</th>
+                  <th style="text-align:center">ID</th>
+                  <th style="text-align:center">Name</th>
+                  <th style="text-align:center">Email</th>
+                  <th style="text-align:center">Birthdate</th>
+                  <th style="text-align:center;">Operations</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for customer in customers %}
+                <tr>
+                  <td style="text-align:center">{{customer.dateRegistered_Customer}}</td>
+                  <td style="text-align:center"> WELLO - {{customer.id}}</td>
+                  <td>{{customer.firstName}} {{customer.middleName}} {{customer.lastName}}</td>
+                  <td> {{customer.email}}</td>
+                  <td style="text-align:center"> {{customer.birthdate}}</td>
+                  <td style="text-align:center">
+                    <div class="text-center">
+                      <a type="button" class="btn btn-default btn-sm" style="width:55px" href="#" data-toggle="modal" data-target="#newModal-{{customer.id}}"><span class="glyphicon glyphicon-eye-open" style="color:black"></span></a>
+
+                      <button type="button" class="btn btn-default btn-sm" style="width:55px" data-toggle="modal" data-target="#deleteModal-{{customer.id}}">
+                        <span class="glyphicon glyphicon-trash"></span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Modal VIEW-->
+                <div class="modal fade" id="newModal-{{customer.id}}" tabindex="-1" role="dialog" aria-labelledby="newModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="background-color:beige">
+                      <div class="modal-header" style="background-color:chocolate">
+                        <h4 class="modal-title font-weight-bold" style="color:white">VIEW DETAILS</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <form id="updateForm" method='POST'>
+                        {% csrf_token %}
+                        <div class="modal-body">
+                          <div class="picture-container">
+                            <div class="picture">
+                              {% if customer.profilePicture.url is not null %}
+                              <img src="{{customer.profilePicture.url}}" class="picture-src" id="profilePicturePreview" title="">
+                              <input type="file" id="profilePicture" name="profilePicture" class="">
+                              {% else %}
+                              <img src="{% static 'images/user.png' %}" class="picture-src" id="profilePicturePreview" title="" required>
+                              <input type="file" id="profilePicture" name="profilePicture" class="">
+                              <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                              {% endif %}
+                            </div>
+                            <br>
+                          </div>
+                          <br>
+                          <input type="text" name="customer-id" value={{customer.id}} hidden>
+                          <div class="row">
+                            <div class="col-md-4 mb-3">
+                              <label for="firstName">First Name</label>
+                              <input type="text" class="form-control" id="id-firstName" name="customer-firstName" placeholder="First Name" value="{{customer.firstName}}" required minlength="1" maxlength="20">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                              <label for="middleName">Middle Name</label>
+                              <input type="text" class="form-control" id="id-middleName" name="customer-middleName" placeholder="Middle  Name" value="{{customer.middleName}}" minlength="1" maxlength="20">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                              <label for="lastName">Last Name</label>
+                              <input type="text" class="form-control" id="id-lastName" name="customer-lastName" placeholder="Last Name" value="{{customer.lastName}}" required minlength="1" maxlength="20">
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-3 mb-3">
+                              <label for="street">Street</label>
+                              <input type="text" class="form-control" id="id-street" name="customer-street" placeholder="Street" value="{{customer.street}}" minlength="1" maxlength="30">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                              <label for="barangay">Baranggay</label>
+                              <input type="text" class="form-control" id="id-barangay" name="customer-barangay" placeholder="Baranggay" value="{{customer.barangay}}" required minlength="1" maxlength="30">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                              <label for="city">City</label>
+                              <input type="text" class="form-control" id="id-city" name="customer-city" placeholder="City" value="{{customer.city}}" required minlength="1" maxlength="30">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                              <label for="Zip">Zip Code</label>
+                              <input type="text" class="form-control" id="id-Zip" name="customer-Zip" placeholder="Zip Code" value="{{customer.Zip}}" required minlength="3" maxlength="15">
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-3 mb-3">
+                              <label for="province">Province</label>
+                              <input type="text" class="form-control" id="id-province" name="customer-province" placeholder="Province" value="{{customer.province}}" required minlength="1" maxlength="30">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                              <label for="country">Country</label>
+                              <input type="text" class="form-control" id="id-country" name="customer-country" placeholder="Country" value="{{customer.country}}" required minlength="1" maxlength="30">
+                            </div>
+                            <div class="col-md-3 mb-2">
+                              <label for="religion">Religion</label>
+                              <input type="text" class="form-control" id="id-religion" name="customer-religion" placeholder="Religion" value="{{customer.religion}}" required minlength="1" maxlength="50">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                              <div class="form-group">
+                                <label for="birthday">Birthday</label>
+                                <input type="date" class="form-control" id="id-birthdate" name="customer-birthdate" placeholder="mm/dd/yyyy" onfocus="(this.type='date')" onblur="(this.type='text')" required value="{{customer.birthdate}}">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-2 mb-3">
+                              <label for="height">Height</label>
+                              <input type="text" class="form-control" id="id-height" name="customer-height" pattern="[0-9]{2,3}" placeholder="Height in cm" value="{{customer.height}}" minlength="1" maxlength="100" required>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                              <label for="weight">Weight</label>
+                              <input type="text" class="form-control" id="id-weight" name="customer-weight" pattern="[0-9]{1,3}" placeholder="Weight in kg" value="{{customer.weight}}" required minlength="1" maxlength="100" required>
+                            </div>
+                            <div class="col-md-2 mb-6">
+                              <label for="status">Status</label>
+                              <select value="{{customer.status}}" class="form-control-lg" style="border-color: lightgrey" id="id-status" name="customer-status" required>
+                                <option>{{customer.status}}</option>
+                                <option value="Single">Single <br></option>
+                                <option value="Married">Married</option>
+                                <option value="Divorced">Divorced</option>
+                                <option value="Widowed">Widowed</option>
+                              </select>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                              <label for="gender">Gender</label> <br>
+                              <div class="form-check-inline text-right">
+                                <label class="form-check-label ">
+                                  {% if customer.gender == 'Male' %}
+                                  <input style="margin: 8px" type="radio" class="form-check-sm" name="customer-gender" value="Male" checked="checked">Male
+                                  <input style="margin: 8px" type="radio" class="form-check-sm" name="customer-gender" value="Female">Female
+                                  {% else %}
+                                  <input style="margin: 8px" type="radio" class="form-check-sm" name="customer-gender" value="Male">Male
+                                  <input style="margin: 8px" type="radio" class="form-check-sm" name="customer-gender" value="Female" checked="checked">Female
+                                  {% endif %}
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6 mb-3">
+                              <label for="email">Email</label>
+                              <input type="email" class="form-control" id="id-email" name="customer-email" placeholder="Email" value="{{customer.email}}" required minlength="1" maxlength="50">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                              <label for="password">Password</label>
+                              <input type="password" class="form-control" id="id-password" name="customer-password" placeholder="Password" value="{{customer.password}}" required minlength="8" maxlength="16">
+                            </div>
+                          </div>
+
+                          <hr class="mb-4">
+
+                          <div class="row">
+                            <div class="col-md-6 mb-3">
+                              <label for="spouseName">Spouse's name</label>
+                              <input type="text" class="form-control" id="id-spouseName" name="customer-spouseName" placeholder="Spouse's Full Name" value="{{customer.spouseName}}" minlength="1" maxlength="50">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                              <label for="spouseOccupation">Occupation</label>
+                              <input type="text" class="form-control" id="id-spouseOccupation" name="customer-spouseOccupation" placeholder="Spouse's Occupation" value="{{customer.spouseOccupation}}" minlength="1" maxlength="50">
+                            </div>
+                            <div class="col-md-2 mb-3">
+                              <label for="noChildren">No. of Children</label>
+                              <input type="number" class="form-control" id="id-noChildren" name="customer-noChildren" placeholder="No. of Children" value="{{customer.noChildren}}" min="0">
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6 mb-3">
+                              <label for="motherName">Mother's Name</label>
+                              <input type="text" class="form-control" id="id-motherName" name="customer-motherName" placeholder="Mother's Full Name" value="{{customer.motherName}}" required minlength="1" maxlength="50">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                              <label for="motherOccupation">Occupation</label>
+                              <input type="text" class="form-control" id="id-motherOccupation" name="customer-motherOccupation" placeholder="Mother's Occupation" value="{{customer.motherOccupation}}" required minlength="1" maxlength="50">
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6 mb-3">
+                              <label for="fatherName">Father's Name</label>
+                              <input type="text" class="form-control" id="id-fatherName" name="customer-fatherName" placeholder="Father's Full Name" value="{{customer.fatherName}}" required minlength="1" maxlength="50">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                              <label for="fatherOccupation">Occupation</label>
+                              <input type="text" class="form-control" id="id-fatherOccupation" name="customer-fatherOccupation" placeholder="Father's Occupation" value="{{customer.fatherOccupation}}" required minlength="1" maxlength="50">
+                            </div>
+                          </div>
+                          <div class="modal-footer" style="background-color:beige">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">CANCEL</button>
+                            <button type="submit" id="btnUpdate1" name="btnUpdate1" class="btn btn-danger">UPDATE</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                  
+                <!-- Modal DELETE-->
+                <div class="modal fade" id="deleteModal-{{customer.id}}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header" style="background-color:chocolate; color:white">
+                        <h4 class="modal-title" id="deleteModalLabel"><strong>DELETE RECORD</strong></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>        
+                        <div class="modal-body" style="background-color:beige">
+                            <form id="deleteForm" method='POST'>
+                            {% csrf_token %}
+                            <input type="text" name="ccustomer-id" value={{customer.id}} hidden>
+                            <p>Are you sure you want to delete this record?</p>
+                            <div class="modal-footer" style="background-color:beige">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">NO</button>
+                                <button type="SUBMIT" class="btn btn-danger" id="btnDelete1" name="btnDelete1">YES</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  {% endblock content %}
+
+  {% block footerinclude %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.flash.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.print.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
+  <script>
+    //date filter and pagination for MedTable
+    $(document).ready(function() {
+      let initialTableSettings = {
+        "pageLength": 10,
+        "lengthMenu": [
+          [10, 20, 30, -1],
+          [10, 20, 30, "All"]
+        ],
+        dom: 'flrtBi<"posR"p>',
+        buttons: [
+          'copy',
+          'excel',
+
+        ]
+      }
+
+      $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+          var min = $('#min-date').datepicker("getDate");
+          var max = $('#max-date').datepicker("getDate");
+          // change str order before making  date object because it uses a new Date("mm/dd/yyyy") format for short date.
+          var startDate = new Date(data[0])
+          if (min == null && max == null) {
+            return true;
+          }
+          if (min == null && startDate <= max) {
+            return true;
+          }
+          if (max == null && startDate >= min) {
+            return true;
+          }
+          if (startDate <= max && startDate >= min) {
+            return true;
+          }
+          return false;
+        }
+      );
+
+      $("#min-date").datepicker({
+        onSelect: function() {
+          table.draw();
+        },
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "dd/mm/yy"
+      });
+      $("#max-date").datepicker({
+        onSelect: function() {
+          table.draw();
+        },
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "dd/mm/yy"
+      });
+      var table = $('#myMedTable').DataTable(initialTableSettings);
+
+      // Event listener to the two range filtering inputs to redraw on input
+      $('#min-date, #max-date').change(function() {
+        table.draw();
+      });
+    });
+
+    //date filter and pagination for CustTable
+    $(document).ready(function() {
+      let initialTableSettings = {
+        "pageLength": 10,
+        "lengthMenu": [
+          [10, 20, 30, -1],
+          [10, 20, 30, "All"]
+        ],
+        dom: 'flrtBi<"posR"p>',
+        buttons: [
+          'copy',
+          'excel'
+        ]
+      }
+
+      $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+          var min = $('#min').datepicker("getDate");
+          var max = $('#max').datepicker("getDate");
+          // need to change str order before making  date obect since it uses a new Date("mm/dd/yyyy") format for short date.
+          var startDate = new Date(data[0])
+          if (min == null && max == null) {
+            return true;
+          }
+          if (min == null && startDate <= max) {
+            return true;
+          }
+          if (max == null && startDate >= min) {
+            return true;
+          }
+          if (startDate <= max && startDate >= min) {
+            return true;
+          }
+          return false;
+        }
+      );
+
+      $("#min").datepicker({
+        onSelect: function() {
+          table.draw();
+        },
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "dd/mm/yy"
+      });
+      $("#max").datepicker({
+        onSelect: function() {
+          table.draw();
+        },
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "dd/mm/yy"
+      });
+      var table = $('#myCustTable').DataTable(initialTableSettings);
+
+      // Event listener to the two range filtering inputs to redraw on input
+      $('#min, #max').change(function() {
+        table.draw();
+      });
+
+    });
+
+    $(document).ready(function() {
+      //Activate tooltip
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
+{% endblock footerinclude %}
